@@ -3,6 +3,8 @@ using System.IO; // for BinaryReader
 using System.Threading; // Required for the SplashScreen as well as for future Threading of file loads
 using Microsoft.Win32;  // for accessing the registry
 using System.Collections.Generic; // for the arrays/Lists
+using System.Windows.Forms;
+
 namespace Yekyaa.FFXIEncoding
 {
     /// <summary>
@@ -274,6 +276,7 @@ namespace Yekyaa.FFXIEncoding
         /// <returns>Directory to the FFXI Installation with a trailing backslash.</returns>
         public string GetRegistryKey()
         {
+            /**
             string s = String.Empty;
             // Attempt to open the key
             RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\PlayOnlineUS\InstallFolder");
@@ -296,6 +299,34 @@ namespace Yekyaa.FFXIEncoding
                 return (String.Format("{0}\\", s.TrimEnd('\\')));
             }
             return String.Empty;
+            **/
+            /**Towbes modified function to select a directory
+            **/
+            // Initialize the directory path variable
+            string directoryPath = string.Empty;
+
+            // Use FolderBrowserDialog to prompt the user to select a directory
+            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+            {
+                folderBrowserDialog.Description = "Select the directory";
+                folderBrowserDialog.ShowNewFolderButton = true;
+
+                // Show the dialog and check if the user selected a directory
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                {
+                    directoryPath = folderBrowserDialog.SelectedPath;
+
+                    // Ensure the path has a trailing backslash
+                    if (!directoryPath.EndsWith("\\"))
+                    {
+                        directoryPath += "\\";
+                    }
+                }
+            }
+
+            // Return the selected directory path
+            return directoryPath;
+
         }
         #endregion
 
